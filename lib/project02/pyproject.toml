@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "project01"
+name = "project02"
 version = "1.0"
-description = "Snippet of project01"
+description = "Snippet of project02"
 authors = ["Michel Galle <michel.galle@cherre.com>"]
 
 [tool.poetry.dependencies]
@@ -9,6 +9,7 @@ python = "^3.7"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
+pytest-cov = "2.12.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
