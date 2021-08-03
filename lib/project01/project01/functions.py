@@ -1,7 +1,9 @@
 
 class Functions:
 
-    def main():
+    def main(x):
+        if x:
+            y=10
         return "hello world"
 
 

@@ -1,0 +1,65 @@
+name: "On Push"
+
+on: [push]
+
+jobs:
+
+  test-python:
+    name: Test Python
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        directory: [
+          "./lib/project01",
+          "./lib/project02"
+        ]
+    defaults:
+      run:
+        working-directory: ${{ matrix.directory }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.7"
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.1.1
+        with:
+          virtualenvs-in-project: true
+          version: 1.1.4
+      - name: Install dependencies
+        run: poetry install
+      - name: Run pytest
+        run: |
+          source .venv/bin/activate
+          pytest --cov-branch --cov=$(basename "${{ matrix.directory }}") --cov-report= tests/
+          coverage report --fail-under=50
+          $?
+      - name: Create commit comment
+        if: ${{ steps.has-envs.outputs.modifiedFiles > 0 }}
+        uses: peter-evans/commit-comment@v1
+        with:
+          body: |
+            Metadata should be static; therefore it should not contain
+            runtime information such as environment variables
+  test-unit:
+    name: Unit tests
+    if: ${{ always() }}
+    needs:
+      - test-python
+    runs-on: ubuntu-latest
+    steps:
+      - name: Python unit tests
+        if: ${{ needs.test-python.result != 'success' }}
+        run: exit 1
+
+  test-coverage:
+    name: Code Coverage Check
+    if: ${{ always() }}
+    needs:
+      - test-python
+    run-on: ubuntu-latest
+    steps:
+      - name: Python Code Coverage Check
+        if: 
+        run: exit 1
