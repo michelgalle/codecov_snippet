@@ -1,15 +1,3 @@
-
-class Functions:
-
-    def main(x):
-        if x:
-            y=10
-        return "hello world"
-
-
-    def version():
-        return "version 1.0"
-
-
-    def author():
-        return "author"
+project01/__init__.py
+project01/folder01/test.py
+project01/functions.py

@@ -38,7 +38,7 @@ jobs:
       - name: Generate report
         id: generate_report
         run: |
-          git diff --name-only --merge-base origin/master -- '*.py' ':!tests/' | cat | grep -oP "^$(echo ${{ matrix.directory }} | cut -c3-)\/\K.*"
+          files=$(git diff --name-only --merge-base origin/master -- '*.py' ':!tests/' | cat | grep -oP "^$(echo ./lib/project01 | cut -c3-)\/\K.*")
       - name: Create commit comment
         # if: ${{ steps.has-envs.outputs.modifiedFiles > 0 }}
         uses: peter-evans/commit-comment@v1
