@@ -40,15 +40,18 @@ jobs:
         run: |
           files=$(git diff --name-only --merge-base origin/master -- '*.py' ':!tests/' | cat | grep -oP "^$(echo ./lib/project01 | cut -c3-)\/\K.*")
           source .venv/bin/activate
-          report=$(coverage report)
+          report=$(coverage report --include=${files//$'\n'/','})
+          report="${report//'%'/'%25'}"
+          report="${report//$'\n'/'%0A'}"
+          report="${report//$'\r'/'%0D'}"
           echo "::set-output name=coverage_result::$report"
       - name: Create commit comment
         # if: ${{ steps.has-envs.outputs.modifiedFiles > 0 }}
         uses: peter-evans/commit-comment@v1
         with:
           body: |
-            Coverage Report
-            ${{ steps.generate_report.outputs.coverage_result }}
+            Coverage Report```
+            ${{ steps.generate_report.outputs.coverage_result }}```
   test-unit:
     name: Unit tests
     if: ${{ always() }}
