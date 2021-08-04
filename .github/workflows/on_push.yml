@@ -38,7 +38,7 @@ jobs:
       - name: Generate report
         id: generate_report
         run: |
-          files=$(git diff --name-only --merge-base origin/master -- '*.py' ':!tests/' | cat | grep -oP "^$(echo ./lib/project01 | cut -c3-)\/\K.*")
+          files=$(git diff --name-only --merge-base origin/master -- '*.py' ':!tests/' | cat | grep -oP "^$(echo ${{ matrix.directory }} | cut -c3-)\/\K.*")
           source .venv/bin/activate
           report=$(coverage report --include=${files//$'\n'/','})
           report="${report//'%'/'%25'}"
@@ -50,8 +50,10 @@ jobs:
         uses: peter-evans/commit-comment@v1
         with:
           body: |
-            Coverage Report```
-            ${{ steps.generate_report.outputs.coverage_result }}```
+            Coverage Report of ${{ matrix.directory }}
+            ```
+            ${{ steps.generate_report.outputs.coverage_result }}
+            ```
   test-unit:
     name: Unit tests
     if: ${{ always() }}
