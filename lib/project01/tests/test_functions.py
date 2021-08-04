@@ -5,3 +5,5 @@ def test_main():
 
 def test_version():
     assert Functions.version() == "version 1.0"
+
+    
