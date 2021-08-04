@@ -9,6 +9,5 @@ class Functions:
     def version():
         return "version 1.0"
 
-
     def author():
         return "author"
