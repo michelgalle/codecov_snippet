@@ -38,7 +38,10 @@ jobs:
       - name: Generate report
         id: generate_report
         run: |
-          git diff --name-only --merge-base origin/master -- . | cat
+          files=$(git diff --name-only --merge-base origin/master -- . | cat | grep -oP "^$(echo ./lib/project01 | cut -c3-)\/\K.*\.py$" | grep "^$(basename $PWD)")
+          files_comma_separated=${files//$'\n'/','}
+          report=$(coverage report --include=$files_comma_separated)
+          echo "::set-output name=coverage_result::$report"
       - name: Create commit comment
         # if: ${{ steps.has-envs.outputs.modifiedFiles > 0 }}
         uses: peter-evans/commit-comment@v1
