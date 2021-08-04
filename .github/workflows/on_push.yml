@@ -39,6 +39,7 @@ jobs:
         id: generate_report
         run: |
           files=$(git diff --name-only --merge-base origin/master -- '*.py' ':!tests/' | cat | grep -oP "^$(echo ./lib/project01 | cut -c3-)\/\K.*")
+          coverage report --include=${files//$'\n'/','}
       - name: Create commit comment
         # if: ${{ steps.has-envs.outputs.modifiedFiles > 0 }}
         uses: peter-evans/commit-comment@v1
