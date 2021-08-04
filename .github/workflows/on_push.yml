@@ -19,6 +19,8 @@ jobs:
         working-directory: ${{ matrix.directory }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
       - uses: actions/setup-python@v2
         with:
           python-version: "3.7"
@@ -36,7 +38,7 @@ jobs:
       - name: Generate report
         id: generate_report
         run: |
-          git diff --name-only --merge-base origin/master -- . | cat | grep -oP "^$(echo ./lib/project01 | cut -c3-)\/\K.*\.py$" | grep "^$(basename $PWD)"
+          git diff --name-only --merge-base origin/master -- . | cat
       - name: Create commit comment
         # if: ${{ steps.has-envs.outputs.modifiedFiles > 0 }}
         uses: peter-evans/commit-comment@v1
