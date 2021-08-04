@@ -1,4 +1,3 @@
-
 class Functions:
 
     def main(x):
@@ -13,6 +12,3 @@ class Functions:
 
     def author():
         return "author"
-
-
-
