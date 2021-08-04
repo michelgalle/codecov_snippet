@@ -20,6 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
+          # by default actions/checkout gets a shallow copy, since we do a git diff between
+          # feature-branch and common ancestor in master, we need get history
           fetch-depth: '0'
       - uses: actions/setup-python@v2
         with:
@@ -37,16 +39,23 @@ jobs:
           pytest --cov-branch --cov=$(basename $PWD) --cov-report= tests/
       - name: Generate report
         id: generate_report
+        # $files will receive a list of all .py files changed in project folder by the pr with exception
+        # of files in tests/ folder. then it will remove part of the path and replace newline with ','
+        # to use it as filter for coverage report.
+        # [[ ! -z $files ]] is to check whether the specific project has files changed.
+        # the output of report needs to have newline replaced, because github actions does not
+        # accept multiline strings as output of steps.
         run: |
           files=$(git diff --name-only --merge-base origin/master -- '*.py' ':!tests/' | cat | grep -oP "^$(echo ${{ matrix.directory }} | cut -c3-)\/\K.*")
           source .venv/bin/activate
-          report=$(coverage report --include=${files//$'\n'/','})
-          report="${report//'%'/'%25'}"
-          report="${report//$'\n'/'%0A'}"
-          report="${report//$'\r'/'%0D'}"
+          report=""
+          [[ ! -z $files ]] && report=$(coverage report --include=${files//$'\n'/','})
+          [[ ! -z $files ]] && report="${report//'%'/'%25'}"
+          [[ ! -z $files ]] && report="${report//$'\n'/'%0A'}"
+          [[ ! -z $files ]] && report="${report//$'\r'/'%0D'}"
           echo "::set-output name=coverage_result::$report"
       - name: Create commit comment
-        # if: ${{ steps.has-envs.outputs.modifiedFiles > 0 }}
+        if: ${{ steps.generate_report.outputs.coverage_result != "" }}
         uses: peter-evans/commit-comment@v1
         with:
           body: |
