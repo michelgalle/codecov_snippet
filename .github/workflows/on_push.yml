@@ -57,14 +57,3 @@ jobs:
       - name: Python unit tests
         if: ${{ needs.test-python.result != 'success' }}
         run: exit 1
-
-  test-coverage:
-    name: Code Coverage Check
-    if: ${{ always() }}
-    needs:
-      - test-python
-    run-on: ubuntu-latest
-    steps:
-      - name: Python Code Coverage Check
-        if: 
-        run: exit 1
