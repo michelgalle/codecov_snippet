@@ -53,7 +53,7 @@ jobs:
           [[ ! -z $files ]] && report="${report//'%'/'%25'}"
           [[ ! -z $files ]] && report="${report//$'\n'/'%0A'}"
           [[ ! -z $files ]] && report="${report//$'\r'/'%0D'}"
-          echo "::set-output name=coverage_result::$report"
+          [[ ! -z $files ]] && echo "::set-output name=coverage_result::$report"
       - name: Create commit comment
         if: ${{ steps.generate_report.outputs.coverage_result != '' }}
         uses: peter-evans/commit-comment@v1
