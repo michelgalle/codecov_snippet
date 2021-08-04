@@ -13,6 +13,3 @@ class Functions:
 
     def author():
         return "author"
-
-
-
