@@ -44,7 +44,7 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           #token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: true
+          #fail_ci_if_error: true
           #files: ./coverage1.xml,./coverage2.xml
           flags: unittests
           name: codecov-${{ matrix.directory }}
