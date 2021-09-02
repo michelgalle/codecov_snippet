@@ -3,14 +3,14 @@
 coverage:
   status:
     project:
-      logsCode:
+      project01:
         target: auto
         flags:
-          - logsCode
-      serviceCode:
+          - project01
+      project02:
         target: auto
         flags:
-          - serviceCode
+          - project02
 comment:
   layout: "reach, diff, flags, files"
   behavior: default
