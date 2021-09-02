@@ -36,35 +36,28 @@ jobs:
       - name: Run pytest
         run: |
           source .venv/bin/activate
-          pytest --cov-branch --cov=$(basename $PWD) --cov-report= tests/
-      - name: Generate report
+          if [ -r envs ]; then
+              source envs
+          fi
+          pytest --cov-branch --cov=. --cov-report=xml tests/
+      - name: Generate coverage report
         id: generate_report
-        # $files will receive a list of all .py files changed in project folder by the pr with exception
-        # of files in tests/ folder. then it will remove part of the path and replace newline with ','
-        # to use it as filter for coverage report.
-        # [[ ! -z $files ]] is to check whether the specific project has files changed.
-        # the output of report needs to have newline replaced, because github actions does not
-        # accept multiline strings as output of steps.
         run: |
-          files=""
-          report=""
           source .venv/bin/activate
-          files=$(git diff --name-only --merge-base origin/master -- '*.py' ':!tests/' | cat )
-          [[ ! -z $files ]] && files=$(echo $files | grep -oP "^$(echo ${{ matrix.directory }} | cut -c3-)\/\K.*")
-          [[ ! -z $files ]] && report=$(coverage report --include=${files//$'\n'/','})
-          [[ ! -z $files ]] && report="${report//'%'/'%25'}"
-          [[ ! -z $files ]] && report="${report//$'\n'/'%0A'}"
-          [[ ! -z $files ]] && report="${report//$'\r'/'%0D'}"
-          echo "::set-output name=coverage_result::$report"
-      - name: Create commit comment
-        if: ${{ steps.generate_report.outputs.coverage_result != '' }}
-        uses: peter-evans/commit-comment@v1
+          if [ -r envs ]; then
+              source envs
+          fi
+          ${{ github.workspace }}/coverage/generate_coverage.sh -c -g
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
         with:
-          body: |
-            Coverage Report of ${{ matrix.directory }}
-            ```
-            ${{ steps.generate_report.outputs.coverage_result }}
-            ```
+          #token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          #files: ./coverage1.xml,./coverage2.xml
+          flags: unittests
+          name: codecov-${{ matrix.directory }}
+          #path_to_write_report: ./coverage/codecov_report.txt
+          verbose: true
   test-unit:
     name: Unit tests
     if: ${{ always() }}
