@@ -6,6 +6,7 @@ class Functions2:
     def version():
         return "version 1.0 project 2"
 
+
     def author():
         return "author project 2"
 
