@@ -1,0 +1,29 @@
+#codecov:
+#  token: your-codecov-token
+coverage:
+  status:
+    project:
+      project01:
+        target: auto
+        flags:
+          - project01
+      project02:
+        target: auto
+        flags:
+          - project02
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
+  require_base: yes
+  require_head: yes
+  show_carryforward_flags: true
+flags:
+  project01:
+    paths:
+      - lib/project01/
+    carryforward: true
+  project02:
+    paths:
+      - lib/project02/
+    carryforward: true

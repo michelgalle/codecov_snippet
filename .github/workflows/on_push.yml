@@ -39,20 +39,12 @@ jobs:
           if [ -r envs ]; then
               source envs
           fi
-          pytest --cov-branch --cov=. --cov-report=xml tests/
-      - name: Generate coverage report
-        id: generate_report
-        run: |
-          source .venv/bin/activate
-          if [ -r envs ]; then
-              source envs
-          fi
-          ${{ github.workspace }}/coverage/generate_coverage.sh -c -g
+          pytest --cov-branch --cov=$(basename $PWD) --cov-report=xml tests/
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
           #token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: true
+          #fail_ci_if_error: true
           #files: ./coverage1.xml,./coverage2.xml
           flags: unittests
           name: codecov-${{ matrix.directory }}
