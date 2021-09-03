@@ -11,3 +11,6 @@ class Functions:
 
     def author():
         return "author"
+
+    def revision():
+        return "1"
