@@ -14,3 +14,7 @@ class Functions:
 
     def revision():
         return "1"
+
+    def new_function():
+        if 1==1:
+            print("test new function")
