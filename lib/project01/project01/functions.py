@@ -14,3 +14,6 @@ class Functions:
 
     def revision():
         return "1"
+
+    def version_2():
+        return "versioning"
