@@ -3,12 +3,10 @@ coverage:
     default_rules:
       flag_coverage_not_uploaded_behavior: exclude 
     project:
-      paths: "!tests/"
       default:
         target: auto
         threshold: 10%
     patch:
-      paths: "!tests/"
       default:
         # basic
         target: auto
@@ -31,3 +29,6 @@ flag_management:
         type: project
         target: auto
         threshold: 10%
+
+ignore:
+  - "**/tests/"
