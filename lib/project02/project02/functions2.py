@@ -10,6 +10,9 @@ class Functions2:
     def author():
         return "author project 2"
 
+    def new_function():
+        return "test flag"
+
     if __name__ == '__main__':
         print(main())
 
